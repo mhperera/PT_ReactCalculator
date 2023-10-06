@@ -10,6 +10,29 @@ export const ACTIONS = {
     EVALUATE: 'evaluate',
 }
 
+const evaluate = ({ currentOperand, previousOperand, operation }) => {
+    const previous = parseFloat(previousOperand);
+    const current = parseFloat(currentOperand);
+    if(isNaN(previous) || isNaN(current)) return ""
+    let computation = '';
+    switch (operation) {
+        case "+":
+            computation = previous + current;
+            break;
+        case "-":
+            computation = previous - current;
+            break;
+        case "*":
+            computation = previous * current;
+            break;
+        case "÷":
+            computation = previous / current;
+            break;
+        default:
+    }
+    return computation.toString();
+}
+
 const reducer = (state, { type, payload }) => {
     switch (type) {
         case ACTIONS.ADD_DIGIT:
@@ -31,9 +54,32 @@ const reducer = (state, { type, payload }) => {
 
 
         case ACTIONS.CHOOSE_OPERATION:
+
+            if (!state.previousOperand && !state.currentOperand) {
+                return state
+            };
+
+            if (!state.previousOperand && state.currentOperand) {
+                return {
+                    ...state,
+                    operation: payload.operator,
+                    previousOperand: state.currentOperand,
+                    currentOperand: null
+                }
+            }
+
+            if (state.previousOperand && !state.currentOperand) {
+                return {
+                    ...state,
+                    operation: payload.operator
+                }
+            }
+
             return {
                 ...state,
-                operation: `${state.operation || ""}${payload.operator}`
+                previousOperand: evaluate(state),
+                currentOperand: null,
+                operation: payload.operator
             };
 
         case ACTIONS.EVALUATE:
@@ -58,7 +104,7 @@ const Calculator = () => {
                 <div className="current-operand">{currentOperand}</div>
             </div>
 
-            <button className="span-two action" onClick={()=>{ dispatch({ type: ACTIONS.CLEAR }) }}>AC</button>
+            <button className="span-two action" onClick={() => { dispatch({ type: ACTIONS.CLEAR }) }}>AC</button>
             <DigitButton digit="DEL" className="action" dispatch={dispatch} />
             <OperationButton operator="÷" className="action" dispatch={dispatch} />
 

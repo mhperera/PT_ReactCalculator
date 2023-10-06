@@ -2,6 +2,9 @@ import React from 'react';
 import { ACTIONS } from './Calculator';
 
 const OperationButton = ({ operator, dispatch, className }) => {
+
+    console.log(operator);
+
     return (
         <button
             className={className}
