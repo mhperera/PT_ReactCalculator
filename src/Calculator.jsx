@@ -64,7 +64,32 @@ const reducer = (state, { type, payload }) => {
             return {};
 
         case ACTIONS.DELETE_DIGIT:
-            return state;
+
+            if(state.override){
+                return {
+                    ...state,
+                    override: false,
+                    currentOperand: null
+                }
+            }
+
+            if(!state.currentOperand){
+                return state;
+            }
+
+            if(state.currentOperand.length === 1){
+                return {
+                    ...state,
+                    override: false,
+                    currentOperand: null
+                }
+            }
+
+            return {
+                ...state,
+                override: false,
+                currentOperand: state.currentOperand.slice(0, -1)
+            };
 
         case ACTIONS.CHOOSE_OPERATION:
 
@@ -129,7 +154,7 @@ const Calculator = () => {
             </div>
 
             <button className="span-two action" onClick={() => { dispatch({ type: ACTIONS.CLEAR }) }}>AC</button>
-            <DigitButton digit="DEL" className="action" dispatch={dispatch} />
+            <button className="action" onClick={() => { dispatch({ type: ACTIONS.DELETE_DIGIT }) }}>DEL</button>
             <OperationButton operator="÷" className="action" dispatch={dispatch} />
 
             <DigitButton digit="1" dispatch={dispatch} />
