@@ -24,7 +24,7 @@ const reducer = (state, { type, payload }) => {
             };
 
         case ACTIONS.CLEAR:
-            return state;
+            return {};
 
         case ACTIONS.DELETE_DIGIT:
             return state;
