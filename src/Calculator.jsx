@@ -13,7 +13,7 @@ export const ACTIONS = {
 const evaluate = ({ currentOperand, previousOperand, operation }) => {
     const previous = parseFloat(previousOperand);
     const current = parseFloat(currentOperand);
-    if(isNaN(previous) || isNaN(current)) return ""
+    if (isNaN(previous) || isNaN(current)) return ""
     let computation = '';
     switch (operation) {
         case "+":
@@ -34,12 +34,26 @@ const evaluate = ({ currentOperand, previousOperand, operation }) => {
 }
 
 const reducer = (state, { type, payload }) => {
+
     switch (type) {
+
         case ACTIONS.ADD_DIGIT:
 
-            if (payload.digit === '0' && state.currentOperand === '0') return state;
+            if (state.override) {
+                return {
+                    ...state,
+                    currentOperand: payload.digit,
+                    override: false
+                };
+            }
 
-            if (payload.digit === '.' && state.currentOperand.includes('.')) return state;
+            if (payload.digit === '0' && state.currentOperand === '0') {
+                return state;
+            }
+
+            if (payload.digit === '.' && state.currentOperand.includes('.')) {
+                return state;
+            }
 
             return {
                 ...state,
@@ -51,7 +65,6 @@ const reducer = (state, { type, payload }) => {
 
         case ACTIONS.DELETE_DIGIT:
             return state;
-
 
         case ACTIONS.CHOOSE_OPERATION:
 
@@ -83,7 +96,18 @@ const reducer = (state, { type, payload }) => {
             };
 
         case ACTIONS.EVALUATE:
-            return state;
+
+            if (!state.previousOperand || !state.currentOperand || !state.operation) {
+                return state;
+            }
+
+            return {
+                ...state,
+                previousOperand: null,
+                currentOperand: evaluate(state),
+                operation: null,
+                override: true
+            };
 
         default:
             return state;
@@ -125,7 +149,7 @@ const Calculator = () => {
 
             <DigitButton digit="." dispatch={dispatch} />
             <DigitButton digit="0" dispatch={dispatch} />
-            <DigitButton digit="=" className="span-two" dispatch={dispatch} />
+            <button className="span-two" onClick={() => { dispatch({ type: ACTIONS.EVALUATE }) }}>=</button>
 
         </div>
     )
