@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react'
 import DigitButton from './DigitButton';
+import OperationButton from './OperationButton';
 
 export const ACTIONS = {
     ADD_DIGIT: 'add-digit',
@@ -12,6 +13,11 @@ export const ACTIONS = {
 const reducer = (state, { type, payload }) => {
     switch (type) {
         case ACTIONS.ADD_DIGIT:
+
+            if (payload.digit === '0' && state.currentOperand === '0') return state;
+
+            if (payload.digit === '.' && state.currentOperand.includes('.')) return state;
+
             return {
                 ...state,
                 currentOperand: `${state.currentOperand || ""}${payload.digit}`
@@ -25,7 +31,10 @@ const reducer = (state, { type, payload }) => {
 
 
         case ACTIONS.CHOOSE_OPERATION:
-            return state;
+            return {
+                ...state,
+                operation: `${state.operation || ""}${payload.operator}`
+            };
 
         case ACTIONS.EVALUATE:
             return state;
@@ -49,24 +58,24 @@ const Calculator = () => {
                 <div className="current-operand">{currentOperand}</div>
             </div>
 
-            <DigitButton digit="AC" className="span-two action" dispatch={dispatch} />
+            <button className="span-two action" onClick={()=>{ dispatch({ type: ACTIONS.CLEAR }) }}>AC</button>
             <DigitButton digit="DEL" className="action" dispatch={dispatch} />
-            <DigitButton digit="/" className="action" dispatch={dispatch} />
+            <OperationButton operator="÷" className="action" dispatch={dispatch} />
 
             <DigitButton digit="1" dispatch={dispatch} />
             <DigitButton digit="2" dispatch={dispatch} />
             <DigitButton digit="3" dispatch={dispatch} />
-            <DigitButton digit="*" className="action" dispatch={dispatch} />
+            <OperationButton operator="*" className="action" dispatch={dispatch} />
 
             <DigitButton digit="4" dispatch={dispatch} />
             <DigitButton digit="5" dispatch={dispatch} />
             <DigitButton digit="6" dispatch={dispatch} />
-            <DigitButton digit="+" className="action" dispatch={dispatch} />
+            <OperationButton operator="+" className="action" dispatch={dispatch} />
 
             <DigitButton digit="7" dispatch={dispatch} />
             <DigitButton digit="8" dispatch={dispatch} />
             <DigitButton digit="9" dispatch={dispatch} />
-            <DigitButton digit="-" className="action" dispatch={dispatch} />
+            <OperationButton operator="-" className="action" dispatch={dispatch} />
 
             <DigitButton digit="." dispatch={dispatch} />
             <DigitButton digit="0" dispatch={dispatch} />

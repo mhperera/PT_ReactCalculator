@@ -12,7 +12,7 @@ body {
   align-items: center;
 	width: 100vw;
 	height: 100vh;
-	background: linear-gradient(top right, rgb(32, 32, 32), rgb(52, 52, 52));
+	background: linear-gradient(to left, rgb(32, 32, 32), rgb(52, 52, 52));
 	background: -webkit-gradient(
 		linear,
 		0% 0%,
@@ -21,12 +21,12 @@ body {
 		to(rgb(52, 52, 52))
 	);
 	background: -moz-linear-gradient(
-		top right,
+		to left,
 		rgb(32, 32, 32),
 		rgb(52, 52, 52)
 	);
 	background: -webkit-linear-gradient(
-		top right,
+		to left,
 		rgb(32, 32, 32),
 		rgb(52, 52, 52)
 	);
